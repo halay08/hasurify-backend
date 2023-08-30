@@ -1,0 +1,42 @@
+module.exports = {
+  clearMocks: true,
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  roots: ['<rootDir>/src'],
+  moduleFileExtensions: ['js', 'ts'],
+  moduleDirectories: ['node_modules', 'src'],
+  testMatch: ['**/**/(*.)?(spec|test|jest.config).(ts|js)+'],
+  transform: {
+    '^.+\\.(ts)$': 'ts-jest',
+  },
+  collectCoverage: true,
+  coverageReporters: ['text', 'lcov', 'json-summary'],
+  coverageDirectory: 'coverage',
+  testResultsProcessor: 'jest-junit',
+  collectCoverageFrom: [
+    'src/**/*.{js,ts}',
+    '!**/setupTests.js',
+    '!**/node_modules/**',
+    '!**/build/**',
+    '!**/.build/**',
+    '!**/.serverless/**',
+    '!**/constants/**',
+    '!**/types/**',
+    '!**/index.ts',
+    '!**/query.ts',
+    '!**/queries.ts',
+    '!**/*.{e2e,spec,test}.ts',
+  ],
+  reporters: [
+    'default',
+    ['jest-junit', { suiteName: 'jest junit', outputName: 'junit.xml' }],
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 0,
+      functions: 0,
+      lines: 0,
+      statements: 0,
+    },
+  },
+};

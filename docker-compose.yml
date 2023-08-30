@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  hasurify-postgres:
+    image: postgres:15
+    container_name: hasurify-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGTZ: ${POSTGRES_TIMEZONE}
+    ports:
+      - target: 5432
+        published: ${POSTGRES_PORT}
+        protocol: tcp
+        mode: host
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      hasurify_network:
+        ipv4_address: 172.0.0.2
+
+  hasurify-graphql-engine:
+    image: hasura/graphql-engine:v2.32.1
+    container_name: hasurify-graphql-engine
+    ports:
+      - target: 8080
+        published: ${HASURA_ENDPOINT_PORT}
+        protocol: tcp
+        mode: host
+    volumes:
+      - ./hasura/migrations:/hasura-migrations
+    depends_on:
+      - hasurify-postgres
+    restart: always
+    env_file: ./.env
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: "postgres://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}"
+      HASURA_GRAPHQL_DATABASE_READ_REPLICA_URL: "postgres://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}"
+    networks:
+      hasurify_network:
+        ipv4_address: 172.0.0.3
+    links:
+      - hasurify-postgres
+
+  hasurify-nginx-proxy:
+    image: bradjonesllc/nginx-dnsmasq
+    container_name: hasurify-nginx-proxy
+    hostname: docker
+    ports:
+      - 4001:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      hasurify_network:
+        ipv4_address: 172.0.0.4
+
+volumes:
+  postgres_data:
+
+networks:
+  hasurify_network:
+    external: true

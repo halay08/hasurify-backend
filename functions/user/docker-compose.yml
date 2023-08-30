@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  app:
+    container_name: hasurify-user
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 4013:3000
+    hostname: 'docker'
+    volumes:
+      - ./:/home/app
+      - /home/app/node_modules
+    networks:
+      hasurify_network:
+networks:
+  hasurify_network:
+    external: true

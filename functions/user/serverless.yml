@@ -1,0 +1,103 @@
+service: user
+
+provider:
+  name: aws
+  deploymentMethod: direct
+  region: ap-southeast-1
+  runtime: nodejs18.x
+  memorySize: 512 # will be inherited by all functions
+  timeout: 30
+  maximumRetryAttempts: 0
+  architecture: arm64
+  stage: dev
+  apiGateway:
+    restApiId: ${self:custom.secrets.restApiId}
+    restApiRootResourceId: ${self:custom.secrets.restApiRootResourceId}
+  environment: ${self:custom.secrets.globalEnv}
+  vpc:
+    subnetIds: ${self:custom.secrets.vpc.subnetIds, self:custom.emptyArray}
+    securityGroupIds: ${self:custom.secrets.vpc.securityGroupIds, self:custom.emptyArray}
+
+package:
+  patterns:
+    - '!events'
+    - '!tests'
+    - '!docker-compose.yml'
+    - '!Dockerfile.development'
+    - '!secrets.dev.yml'
+    - '!secrets.staging.yml'
+    - '!secrets.prod.yml'
+    - '!secrets.dev.yml.example'
+    - '!tmp/**'
+    - '!.git/**'
+  excludeDevDependencies: true
+
+custom:
+  emptyObject: {}
+  emptyString: ''
+  emptyArray: []
+  provisionedConcurrency: 20
+  reservedConcurrency: 100
+  serverless-offline:
+    useChildProcesses: true
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    packager: yarn
+    target: node18
+    watch:
+      # anymatch-compatible definition (https://github.com/es128/anymatch)
+      pattern: ['./src/**/*.ts', './src/**/*.js'] # default .
+      ignore: ['.serverless/**/*', '.build', '.esbuild'] # default ['.build', 'dist', 'node_modules']
+  secrets:
+    restApiId: ${file(secrets.${opt:stage, self:provider.stage}.yml):restApiId, self:custom.emptyString}
+    restApiRootResourceId: ${file(secrets.${opt:stage, self:provider.stage}.yml):restApiRootResourceId, self:custom.emptyString}
+    globalEnv: ${file(secrets.${opt:stage, self:provider.stage}.yml):globalEnv, self:custom.emptyObject}
+    loginEnv: ${file(secrets.${opt:stage, self:provider.stage}.yml):loginEnv, self:custom.emptyObject}
+    hasuraAuthWebhookEnv: ${file(secrets.${opt:stage, self:provider.stage}.yml):hasuraAuthWebhookEnv, self:custom.emptyObject}
+    createUserEnv: ${file(secrets.${opt:stage, self:provider.stage}.yml):createUserEnv, self:custom.emptyObject}
+    vpc: ${file(secrets.${opt:stage, self:provider.stage}.yml):vpc, self:custom.emptyObject}
+    deployment: ${file(secrets.${opt:stage, self:provider.stage}.yml):deployment, self:custom.emptyObject}
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+  - serverless-secrets-plugin
+
+functions:
+  login:
+    handler: src/index.login
+    name: ${self:service}-login-${opt:stage, self:provider.stage}
+    description: Handle JWT authentication for Hasura
+    environment: ${self:custom.secrets.loginEnv}
+    maximumRetryAttempts: 0
+    events:
+      - http:
+          path: user/login
+          method: post
+          integration: lambda-proxy
+
+  hasuraAuthWebhook:
+    handler: src/index.authorize
+    name: ${self:service}-hasura-auth-webhook-${opt:stage, self:provider.stage}
+    description: Handle Hasura authorization for Hasura
+    environment: ${self:custom.secrets.hasuraAuthWebhookEnv}
+    maximumRetryAttempts: 0
+    events:
+      - http:
+          path: user/authorize
+          method: post
+          integration: lambda-proxy
+
+  createUser:
+    handler: src/index.createUser
+    name: ${self:service}-create-user-${opt:stage, self:provider.stage}
+    description: This function is to handle the user creation process
+    environment: ${self:custom.secrets.createUserEnv}
+    maximumRetryAttempts: 0
+    events:
+      - http:
+          path: user/create
+          method: post
+          integration: lambda-proxy

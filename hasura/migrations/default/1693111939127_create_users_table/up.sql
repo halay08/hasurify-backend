@@ -1,0 +1,26 @@
+CREATE TYPE user_role AS ENUM (
+  'SUPER_ADMIN',
+  'MANAGER',
+  'CONSULTANT',
+  'EDITOR',
+  'STAFF'
+);
+
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  skype VARCHAR(255),
+  mobile VARCHAR(255),
+  work_phone VARCHAR(255),
+  is_active BOOLEAN NOT NULL DEFAULT FALSE,
+  role user_role NOT NULL DEFAULT 'STAFF',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  deleted_at TIMESTAMP WITH TIME ZONE,
+  CONSTRAINT users_email_unique UNIQUE(email),
+  CONSTRAINT users_mobile_unique UNIQUE(mobile)
+);

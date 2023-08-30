@@ -1,0 +1,89 @@
+{
+  "name": "user-service",
+  "version": "1.0.0",
+  "description": "This is simple REST API example for AWS Lambda By Serverless framwork with TypeScript and MongoDB Atlas.",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf ./dist && rimraf ./.build && rimraf ./.serverless",
+    "predev": "yarn lint:fix",
+    "dev": "serverless offline start --config serverless.offline.yml --host 0.0.0.0",
+    "prepackage:dev": "yarn lint",
+    "prepackage:uat": "yarn lint",
+    "prepackage:prod": "yarn lint",
+    "predeploy:dev": "yarn lint",
+    "predeploy:uat": "yarn lint",
+    "predeploy:prod": "yarn lint",
+    "package:dev": "serverless package --aws-profile hasurify --stage dev",
+    "package:uat": "serverless package --aws-profile hasurify --stage uat",
+    "package:prod": "serverless package --aws-profile hasurify_prod --stage prod",
+    "deploy:dev": "serverless deploy --aws-profile hasurify --stage dev",
+    "deploy:uat": "serverless deploy --aws-profile hasurify --stage uat",
+    "deploy:prod": "serverless deploy --aws-profile hasurify_prod --stage prod",
+    "destroy:dev": "serverless remove --aws-profile hasurify --stage dev",
+    "destroy:uat": "serverless remove --aws-profile hasurify --stage uat",
+    "destroy:prod": "serverless remove --aws-profile hasurify_prod --stage prod",
+    "test": "jest",
+    "coverage": "nyc --reporter lcov yarn test",
+    "coverage:ci": "JEST_JUNIT_OUTPUT_DIR='coverage' npx jest --ci --coverage --maxWorkers 4 --testLocationInResults",
+    "coverate:ci:summary": "yarn coverage:ci | tee ./coverage.txt",
+    "lint": "eslint src/ --ext .ts --ext .js",
+    "lint:fix": "eslint src/ --ext .ts --ext .js --fix",
+    "lint:fix:preview": "eslint src/ --ext .ts --ext .js --fix-dry-run"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "dependencies": {
+    "@hasurify/graphql": "1.2.2",
+    "@hasurify/lambda": "^1.0.0",
+    "@hasurify/util": "1.1.0",
+    "aws-lambda": "^1.0.7",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.114",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/dotenv-safe": "^8.1.0",
+    "@types/jest": "^29.5.3",
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/node": "^18.15.10",
+    "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.10.2",
+    "@typescript-eslint/parser": "^5.10.2",
+    "cross-env": "^7.0.2",
+    "esbuild": "^0.17.14",
+    "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^8.0.3",
+    "jest": "^29.6.2",
+    "jest-junit": "^16.0.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.8.6",
+    "rimraf": "^4.4.1",
+    "serverless-esbuild": "^1.43.0",
+    "serverless-offline": "^12.0.4",
+    "serverless-plugin-typescript": "^2.1.4",
+    "serverless-secrets-plugin": "^0.1.0",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^8.9.1",
+    "typescript": "^4.5.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Q-Angelo/aws-node-typescript-rest-api.git"
+  },
+  "keywords": [
+    "Hasurify Create"
+  ],
+  "author": "Ken Le <ken@kenstack.io>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hasurify/backend/issues"
+  },
+  "homepage": "https://github.com/hasurify/backend#readme"
+}

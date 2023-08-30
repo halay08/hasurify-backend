@@ -1,0 +1,22 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+.build
+.esbuild
+secrets.*.yml
+
+.nyc_output
+coverage
+test-report.xml
+coverage.txt
+junit.xml
+
+package-lock.json
+
+out-logger.json
+
+.DS_Store
+*.log

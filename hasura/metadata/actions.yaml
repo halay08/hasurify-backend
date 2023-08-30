@@ -1,0 +1,32 @@
+actions:
+  - name: createUser
+    definition:
+      kind: synchronous
+      handler: '{{SERVERLESS_URL}}/user/create'
+    permissions:
+      - role: SUPER_ADMIN
+  - name: login
+    definition:
+      kind: synchronous
+      handler: '{{SERVERLESS_URL}}/user/login'
+    permissions:
+      - role: anonymous
+custom_types:
+  enums:
+    - name: LoginType
+      values:
+        - description: null
+          is_deprecated: null
+          value: PASSWORD
+        - description: null
+          is_deprecated: null
+          value: GOOGLE
+        - description: null
+          is_deprecated: null
+          value: FACEBOOK
+  input_objects:
+    - name: CreateUserInput
+  objects:
+    - name: LoginResponse
+    - name: CreateUserResponse
+  scalars: []

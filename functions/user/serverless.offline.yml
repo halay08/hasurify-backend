@@ -1,0 +1,10 @@
+service: user
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+  - serverless-secrets-plugin
+
+provider: ${file(./serverless.yml):provider}
+custom: ${file(./serverless.yml):custom}
+package: ${file(./serverless.yml):package}
+functions: ${file(./serverless.yml):functions}

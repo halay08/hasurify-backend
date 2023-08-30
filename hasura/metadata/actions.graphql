@@ -1,0 +1,42 @@
+type Mutation {
+  createUser(
+    input: CreateUserInput!
+  ): CreateUserResponse
+}
+
+type Mutation {
+  login(
+    email: String
+    password: String
+    access_token: String
+    login_type: LoginType!
+  ): LoginResponse!
+}
+
+enum LoginType {
+  PASSWORD
+  GOOGLE
+  FACEBOOK
+}
+
+input CreateUserInput {
+  id: Int
+  first_name: String!
+  last_name: String!
+  title: String!
+  email: String
+  password: String
+  skype: String
+  mobile: String
+  work_phone: String
+  role: String
+}
+
+type LoginResponse {
+  token: String
+}
+
+type CreateUserResponse {
+  id: Int!
+}
+

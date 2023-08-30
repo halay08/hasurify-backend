@@ -1,0 +1,16 @@
+# don't lint:
+node_modules
+README.md
+
+# config files
+.eslintrc.js
+.prettierrc.js
+webpack.config.js
+
+# don't lint build output
+dist
+build
+lib
+# don't lint unit-test coverage
+coverage
+__tests__

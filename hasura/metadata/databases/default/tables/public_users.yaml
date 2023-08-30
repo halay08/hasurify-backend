@@ -1,0 +1,244 @@
+table:
+  name: users
+  schema: public
+insert_permissions:
+  - role: SUPER_ADMIN
+    permission:
+      check: {}
+      columns:
+        - deleted_at
+        - email
+        - first_name
+        - is_active
+        - last_name
+        - mobile
+        - password
+        - role
+        - skype
+        - title
+        - updated_at
+        - work_phone
+    comment: ""
+select_permissions:
+  - role: CONSULTANT
+    permission:
+      columns:
+        - is_active
+        - email
+        - first_name
+        - last_name
+        - mobile
+        - password
+        - skype
+        - title
+        - work_phone
+        - id
+        - created_at
+        - deleted_at
+        - updated_at
+        - role
+      filter:
+        _and:
+          - deleted_at:
+              _is_null: true
+          - id:
+              _eq: X-Hasura-User-Id
+    comment: ""
+  - role: EDITOR
+    permission:
+      columns:
+        - is_active
+        - email
+        - first_name
+        - last_name
+        - mobile
+        - password
+        - skype
+        - title
+        - work_phone
+        - id
+        - created_at
+        - deleted_at
+        - updated_at
+        - role
+      filter:
+        _and:
+          - deleted_at:
+              _is_null: true
+          - id:
+              _eq: X-Hasura-User-Id
+    comment: ""
+  - role: MANAGER
+    permission:
+      columns:
+        - is_active
+        - email
+        - first_name
+        - last_name
+        - mobile
+        - password
+        - skype
+        - title
+        - work_phone
+        - id
+        - created_at
+        - deleted_at
+        - updated_at
+        - role
+      filter:
+        deleted_at:
+          _is_null: true
+      allow_aggregations: true
+    comment: ""
+  - role: STAFF
+    permission:
+      columns:
+        - is_active
+        - email
+        - first_name
+        - last_name
+        - mobile
+        - password
+        - skype
+        - title
+        - work_phone
+        - id
+        - created_at
+        - deleted_at
+        - updated_at
+        - role
+      filter:
+        _and:
+          - deleted_at:
+              _is_null: true
+          - id:
+              _eq: X-Hasura-User-Id
+    comment: ""
+  - role: SUPER_ADMIN
+    permission:
+      columns:
+        - is_active
+        - email
+        - first_name
+        - last_name
+        - mobile
+        - password
+        - skype
+        - title
+        - work_phone
+        - id
+        - created_at
+        - deleted_at
+        - updated_at
+        - role
+      filter:
+        deleted_at:
+          _is_null: true
+      allow_aggregations: true
+    comment: ""
+update_permissions:
+  - role: CONSULTANT
+    permission:
+      columns:
+        - first_name
+        - last_name
+        - mobile
+        - password
+        - skype
+        - title
+        - work_phone
+      filter:
+        _and:
+          - deleted_at:
+              _is_null: true
+          - id:
+              _eq: X-Hasura-User-Id
+      check:
+        _and:
+          - deleted_at:
+              _is_null: true
+          - id:
+              _eq: X-Hasura-User-Id
+    comment: ""
+  - role: EDITOR
+    permission:
+      columns:
+        - first_name
+        - last_name
+        - mobile
+        - password
+        - skype
+        - title
+        - updated_at
+        - work_phone
+      filter:
+        _and:
+          - deleted_at:
+              _is_null: true
+          - id:
+              _eq: X-Hasura-User-Id
+      check:
+        _and:
+          - deleted_at:
+              _is_null: true
+          - id:
+              _eq: X-Hasura-User-Id
+    comment: ""
+  - role: MANAGER
+    permission:
+      columns:
+        - deleted_at
+        - first_name
+        - is_active
+        - last_name
+        - mobile
+        - password
+        - skype
+        - title
+        - updated_at
+        - work_phone
+      filter: {}
+      check: null
+    comment: ""
+  - role: STAFF
+    permission:
+      columns:
+        - first_name
+        - last_name
+        - mobile
+        - password
+        - skype
+        - title
+        - updated_at
+        - work_phone
+      filter:
+        _and:
+          - deleted_at:
+              _is_null: true
+          - id:
+              _eq: X-Hasura-User-Id
+      check:
+        _and:
+          - deleted_at:
+              _is_null: true
+          - id:
+              _eq: X-Hasura-User-Id
+    comment: ""
+  - role: SUPER_ADMIN
+    permission:
+      columns:
+        - deleted_at
+        - email
+        - first_name
+        - is_active
+        - last_name
+        - mobile
+        - password
+        - role
+        - skype
+        - title
+        - updated_at
+        - work_phone
+      filter: {}
+      check: {}
+    comment: ""
